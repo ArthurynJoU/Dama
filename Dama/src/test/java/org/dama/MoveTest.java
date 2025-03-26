@@ -1,5 +1,7 @@
 package org.dama;
 
+import org.dama.core.Move;
+import org.dama.core.Position;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

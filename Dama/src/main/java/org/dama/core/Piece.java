@@ -1,10 +1,5 @@
-package org.dama;
+package org.dama.core;
 
-/**
- * Jednoduchá reprezentácia figúrky:
- * - vlastník (biely alebo čierny),
- * - typ (MAN alebo KING).
- */
 public class Piece {
     private final Player owner;
     private PieceType type;

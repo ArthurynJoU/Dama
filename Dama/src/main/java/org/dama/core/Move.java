@@ -1,13 +1,9 @@
-package org.dama;
+package org.dama.core;
 
-/**
- * Trieda Move predstavuje jeden ťah (z pozície from na to),
- * prípadne s pozíciou vyhodenej figúrky.
- */
 public class Move {
     private final Position from;
     private final Position to;
-    private final Position captured; // null, ak nie je vyhodenie
+    private final Position captured; // null, если не взятие
 
     public Move(Position from, Position to) {
         this.from = from;
@@ -40,7 +36,7 @@ public class Move {
     @Override
     public String toString() {
         if (isCapture()) {
-            return from + " -> " + to + " (vyhodená: " + captured + ")";
+            return from + " -> " + to + " (capture: " + captured + ")";
         }
         return from + " -> " + to;
     }

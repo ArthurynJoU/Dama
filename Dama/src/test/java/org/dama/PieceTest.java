@@ -1,5 +1,8 @@
 package org.dama;
 
+import org.dama.core.Piece;
+import org.dama.core.PieceType;
+import org.dama.core.Player;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
