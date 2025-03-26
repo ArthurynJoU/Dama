@@ -289,10 +289,6 @@ public class Board {
         }
     }
 
-    // -----------------------------------------------------------------------------------
-    // OPRAVENÁ LÓGIKA PRE DÁMU (KING): môže ísť o ľubovoľný počet polí šikmo,
-    // kým nenarazí na koniec, vlastnú figúrku alebo (potenciálne) súperovu na branenie.
-    // -----------------------------------------------------------------------------------
     private List<Move> getKingMoves(Position pos) {
         List<Move> moves = new ArrayList<>();
         Piece p = getPiece(pos);
@@ -339,9 +335,6 @@ public class Board {
         return moves;
     }
 
-    // -----------------------------------------------------------------------------------
-    // Pohyby pešiaka (MAN) ostávajú ako doteraz (len 1 krok vpred / 1 krok s braním).
-    // -----------------------------------------------------------------------------------
     private List<Move> getManMoves(Position pos) {
         List<Move> moves = new ArrayList<>();
         Piece p = getPiece(pos);

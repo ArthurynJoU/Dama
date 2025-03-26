@@ -1,5 +1,9 @@
-package org.dama.core;
+package org.dama;
 
+import org.dama.core.Board;
+import org.dama.core.Piece;
+import org.dama.core.Player;
+import org.dama.core.Position;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,7 +24,7 @@ public class BoardTest {
     public void testInitializeDemo() {
         Board board = new Board();
         board.initializeDemo();
-        // тут смотрим, что нужные шашки стоят где надо
+
         Piece p1 = board.getPiece(new Position(5,2)); // C3
         assertNotNull(p1);
         assertEquals(Player.WHITE, p1.getOwner());

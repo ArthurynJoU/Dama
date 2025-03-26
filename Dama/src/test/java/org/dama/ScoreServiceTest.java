@@ -15,7 +15,7 @@ public class ScoreServiceTest {
     @BeforeEach
     void init() {
         scoreService = new ScoreServiceJDBC();
-        scoreService.reset(); // очистим таблицу перед каждым тестом
+        scoreService.reset();
     }
 
     @Test
@@ -39,7 +39,7 @@ public class ScoreServiceTest {
 
         List<Score> list = scoreService.getTopScores("Dama");
         assertEquals(3, list.size());
-        // сортировка по убыванию points => UserB, UserC, UserA
+
         assertEquals("UserB", list.get(0).getPlayer());
         assertEquals("UserC", list.get(1).getPlayer());
         assertEquals("UserA", list.get(2).getPlayer());
