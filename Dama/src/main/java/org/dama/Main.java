@@ -4,8 +4,7 @@ import org.dama.console.ConsoleUI;
 import org.dama.core.Board;
 import org.dama.core.Game;
 import org.dama.entity.Score;
-import org.dama.service.ScoreService;
-import org.dama.service.ScoreServiceJDBC;
+import org.dama.service.*;
 
 import java.util.Date;
 import java.util.Scanner;
@@ -17,6 +16,8 @@ public class Main {
 
     private final Scanner scanner = new Scanner(System.in);
     private final ScoreService scoreService = new ScoreServiceJDBC();
+    private final CommentService commentService = new CommentServiceJDBC();
+    private final RatingService ratingService = new RatingServiceJDBC();
 
     public void run() {
         while(true) {
@@ -66,29 +67,24 @@ public class Main {
         boolean isPvp = !blackInput.isEmpty();
         String blackName = isPvp ? blackInput : "Bot";
 
-        // Vytvoríme hraciu plochu
         Board board = new Board();
-
-        // Buď klasické rozloženie, alebo špeciálna rýchla prezentácia.
         if (demoForTeacher) {
             board.initializeRychlaPrezentacia();
-        } else {
-            // Nič netreba, lebo konštruktor Board volá initialize() štandardne.
         }
 
         Game game = new Game(whiteName, blackName, isPvp, board);
 
-        // Vytvoríme konzolové UI a spustíme hru.
         ConsoleUI ui = new ConsoleUI(game);
         ui.play();
 
-        // Po skončení hry možnosť uložiť skóre
         if (game.isGameOver()) {
             String winner = game.getWinnerName();
             System.out.println("Hra skončila! Víťaz: " + winner);
+
             System.out.println("Uložiť výsledok do tabuľky skóre? (y/n)");
             String ans = scanner.nextLine().trim().toLowerCase();
             if (ans.startsWith("y")) {
+                // Uložíme skóre (rovnako ako predtým)
                 Score score = new Score(
                         "Dama",
                         winner,
@@ -97,6 +93,36 @@ public class Main {
                 );
                 scoreService.addScore(score);
                 System.out.println("Výsledok uložený. Gratulácia, " + winner + "!");
+
+                // ***** Tu pridáme ukladanie hodnotenia a komentára *****
+
+                // 1) Hodnotenie (rating)
+                System.out.println("Chcete pridať hodnotenie hry? (zadajte číslo 1..5 alebo stlačte Enter pre preskočenie):");
+                String ratingStr = scanner.nextLine().trim();
+                if (!ratingStr.isEmpty()) {
+                    try {
+                        int ratingValue = Integer.parseInt(ratingStr);
+                        if (ratingValue >= 1 && ratingValue <= 5) {
+                            game.saveRating(winner, "Dama", ratingValue, (RatingServiceJDBC) ratingService);
+                            System.out.println("Hodnotenie uložené!");
+                        } else {
+                            System.out.println("Neplatné číslo, preskakujem...");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Zadané neplatné číslo, preskakujem...");
+                    }
+                }
+
+                // 2) Komentár
+                System.out.println("Chcete pridať komentár? (y/n)");
+                String cAns = scanner.nextLine().trim().toLowerCase();
+                if (cAns.startsWith("y")) {
+                    System.out.println("Zadajte svoj komentár:");
+                    String text = scanner.nextLine();
+                    // uložíme komentár
+                    game.saveMessage(winner, "Dama", text, (CommentServiceJDBC) commentService);
+                    System.out.println("Komentár uložený!");
+                }
             }
         }
     }

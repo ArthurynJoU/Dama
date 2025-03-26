@@ -81,11 +81,11 @@ public class Board {
         teleports.clear();
 
         // Biele figúrky (ľahko dostupné na branenie)
-        grid[5][2] = new Piece(Player.WHITE, PieceType.MAN); // C3
+        grid[5][2] = new Piece(Player.WHITE, PieceType.KING); // C3
         grid[5][4] = new Piece(Player.WHITE, PieceType.MAN); // E3
 
         // Čierne figúrky (blízko bielych, aby sa stretli)
-        grid[2][3] = new Piece(Player.BLACK, PieceType.MAN); // D6
+        grid[2][3] = new Piece(Player.BLACK, PieceType.KING); // D6
         grid[2][5] = new Piece(Player.BLACK, PieceType.MAN); // F6
 
         // Presne jeden pár teleportov, logicky umiestnený

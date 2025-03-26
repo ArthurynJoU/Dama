@@ -4,18 +4,25 @@ import java.util.Date;
 
 public class Score {
     private String game;
-    private String player;
-    private int points;
-    private Date playedOn;
 
-    public Score() {
-    }
+    private String player;
+
+    private int points;
+
+    private Date playedOn;
 
     public Score(String game, String player, int points, Date playedOn) {
         this.game = game;
         this.player = player;
         this.points = points;
         this.playedOn = playedOn;
+    }
+
+    public Score() {
+        this.game = null;
+        this.player = null;
+        this.points = 0;
+        this.playedOn = null;
     }
 
     public String getGame() {
@@ -59,4 +66,5 @@ public class Score {
                 ", playedOn=" + playedOn +
                 '}';
     }
+
 }

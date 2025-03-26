@@ -1,5 +1,14 @@
 package org.dama.core;
 
+import org.dama.entity.Comment;
+import org.dama.entity.Rating;
+import org.dama.entity.Score;
+import org.dama.entity.ScoreException;
+import org.dama.service.CommentServiceJDBC;
+import org.dama.service.RatingServiceJDBC;
+import org.dama.service.ScoreServiceJDBC;
+
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Random;
 
@@ -229,5 +238,31 @@ public class Game {
             return whiteName;
         }
         return "Zatiaľ nikto nevyhral";
+    }
+
+    public void saveMessage(String playerName, String gameName, String massage, CommentServiceJDBC commentService) {
+        long elapsedTime = System.currentTimeMillis();
+        Timestamp playedOn = new Timestamp(elapsedTime);
+
+        Comment comment = new Comment(gameName, playerName, massage, playedOn);
+        try {
+            commentService.addComment(comment);
+        } catch (ScoreException e) {
+            System.err.println("Failed to save comment: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void saveRating(String playerName, String gameName, int ratings, RatingServiceJDBC ratingService) {
+        long elapsedTime = System.currentTimeMillis();
+        Timestamp playedOn = new Timestamp(elapsedTime);
+
+        Rating rating = new Rating(gameName, playerName, ratings, playedOn);
+        try {
+            ratingService.addRating(rating);
+        } catch (ScoreException e) {
+            System.err.println("Failed to save score: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
