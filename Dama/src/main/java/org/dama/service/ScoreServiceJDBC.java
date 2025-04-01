@@ -1,7 +1,6 @@
 package org.dama.service;
 
 import org.dama.entity.Score;
-import org.dama.entity.ScoreException;
 
 import java.sql.*;
 import java.util.ArrayList;
