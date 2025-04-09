@@ -89,7 +89,7 @@ public class Main {
                         "Dama",
                         winner,
                         winner.equals(whiteName) ? game.getWhiteScore() : game.getBlackScore(),
-                        new Date()
+                        java.time.LocalDateTime.now()
                 );
                 scoreService.addScore(score);
                 System.out.println("Výsledok uložený. Gratulácia, " + winner + "!");

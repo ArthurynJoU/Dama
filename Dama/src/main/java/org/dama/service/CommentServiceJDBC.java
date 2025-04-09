@@ -2,13 +2,14 @@ package org.dama.service;
 
 import org.dama.entity.Comment;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommentServiceJDBC implements CommentService {
     public static final String URL = "jdbc:postgresql://localhost:5432/gamestudio";
     public static final String USER = "postgres";
-    public static final String PASSWORD = "5872";
+    public static final String PASSWORD = "12345678";
     public static final String INSERT = "INSERT INTO comment (game, player, comment, commentedon) VALUES (?, ?, ?, ?)";
     public static final String SELECT = "SELECT game, player, comment, commentedon FROM comment WHERE game = ? ORDER BY commentedon DESC";
     public static final String DELETE = "DELETE FROM comment";
@@ -20,7 +21,8 @@ public class CommentServiceJDBC implements CommentService {
             statement.setString(1, comment.getGame());
             statement.setString(2, comment.getPlayer());
             statement.setString(3, comment.getComment());
-            statement.setTimestamp(4, new Timestamp(comment.getCommentedOndOn().getTime()));
+            // Povedzme, že v entite Comment máš getCommentedOn() -> LocalDateTime
+            statement.setTimestamp(4, Timestamp.valueOf(comment.getCommentedOn()));
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new CommentException("Problem inserting comment", e);
@@ -35,7 +37,15 @@ public class CommentServiceJDBC implements CommentService {
             try (ResultSet rs = statement.executeQuery()) {
                 List<Comment> comments = new ArrayList<>();
                 while (rs.next()) {
-                    comments.add(new Comment(rs.getString(1), rs.getString(2), rs.getString(3), rs.getTimestamp(4)));
+                    // Správna konverzia Timestamp -> LocalDateTime
+                    LocalDateTime ldt = rs.getTimestamp(4).toLocalDateTime();
+                    // Pridanie komentára do zoznamu
+                    comments.add(new Comment(
+                            rs.getString(1), // game
+                            rs.getString(2), // player
+                            rs.getString(3), // comment
+                            ldt             // commentedOn
+                    ));
                 }
                 return comments;
             }
@@ -43,6 +53,7 @@ public class CommentServiceJDBC implements CommentService {
             throw new CommentException("Problem retrieving comments", e);
         }
     }
+
 
     @Override
     public void reset() {

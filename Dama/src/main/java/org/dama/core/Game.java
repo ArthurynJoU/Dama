@@ -7,6 +7,7 @@ import org.dama.service.CommentServiceJDBC;
 import org.dama.service.RatingServiceJDBC;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
@@ -240,7 +241,9 @@ public class Game {
 
     public void saveMessage(String playerName, String gameName, String massage, CommentServiceJDBC commentService) {
         long elapsedTime = System.currentTimeMillis();
-        Timestamp playedOn = new Timestamp(elapsedTime);
+        Timestamp ts = new Timestamp(elapsedTime);
+        // Prevedieme Timestamp na LocalDateTime
+        LocalDateTime playedOn = ts.toLocalDateTime();
 
         Comment comment = new Comment(gameName, playerName, massage, playedOn);
         try {
@@ -251,9 +254,12 @@ public class Game {
         }
     }
 
+
     public void saveRating(String playerName, String gameName, int ratings, RatingServiceJDBC ratingService) {
         long elapsedTime = System.currentTimeMillis();
-        Timestamp playedOn = new Timestamp(elapsedTime);
+        Timestamp ts = new Timestamp(elapsedTime);
+        // Konverzia Timestamp na LocalDateTime
+        LocalDateTime playedOn = ts.toLocalDateTime();
 
         Rating rating = new Rating(gameName, playerName, ratings, playedOn);
         try {
@@ -263,4 +269,5 @@ public class Game {
             e.printStackTrace();
         }
     }
+
 }

@@ -1,7 +1,6 @@
 package org.dama.service;
 
 import org.dama.entity.Score;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,7 @@ public class ScoreServiceJDBC implements ScoreService {
 
     private static final String URL = "jdbc:postgresql://localhost:5432/gamestudio";
     private static final String USER = "postgres";
-    private static final String PASSWORD = "5872";
+    private static final String PASSWORD = "12345678";
 
     private static final String INSERT_SQL =
             "INSERT INTO score (game, player, points, playedon) VALUES (?,?,?,?)";
@@ -36,7 +35,8 @@ public class ScoreServiceJDBC implements ScoreService {
                         String updateSql = "UPDATE score SET points=?, playedon=? WHERE game=? AND player=?";
                         try (PreparedStatement psUpdate = conn.prepareStatement(updateSql)) {
                             psUpdate.setInt(1, score.getPoints());
-                            psUpdate.setTimestamp(2, new Timestamp(score.getPlayedOn().getTime()));
+                            // Konverzia z LocalDateTime na Timestamp
+                            psUpdate.setTimestamp(2, Timestamp.valueOf(score.getPlayedOn()));
                             psUpdate.setString(3, score.getGame());
                             psUpdate.setString(4, score.getPlayer());
                             psUpdate.executeUpdate();
@@ -48,7 +48,8 @@ public class ScoreServiceJDBC implements ScoreService {
                         psInsert.setString(1, score.getGame());
                         psInsert.setString(2, score.getPlayer());
                         psInsert.setInt(3, score.getPoints());
-                        psInsert.setTimestamp(4, new Timestamp(score.getPlayedOn().getTime()));
+                        // Konverzia z LocalDateTime na Timestamp
+                        psInsert.setTimestamp(4, Timestamp.valueOf(score.getPlayedOn()));
                         psInsert.executeUpdate();
                     }
                 }
@@ -70,7 +71,8 @@ public class ScoreServiceJDBC implements ScoreService {
                     s.setGame(rs.getString(1));
                     s.setPlayer(rs.getString(2));
                     s.setPoints(rs.getInt(3));
-                    s.setPlayedOn(rs.getTimestamp(4));
+                    // Konverzia z Timestamp na LocalDateTime
+                    s.setPlayedOn(rs.getTimestamp(4).toLocalDateTime());
                     list.add(s);
                 }
             }

@@ -8,7 +8,7 @@ import java.util.List;
 public class RatingServiceJDBC implements RatingService {
     public static final String URL = "jdbc:postgresql://localhost:5432/gamestudio";
     public static final String USER = "postgres";
-    public static final String PASSWORD = "5872";
+    public static final String PASSWORD = "12345678";
     public static final String SELECT = "SELECT game, player, rating, ratedOn FROM rating WHERE game = ? ORDER BY rating DESC LIMIT 10";
     public static final String DELETE = "DELETE FROM rating";
     public static final String INSERT = "INSERT INTO rating (game, player, rating, ratedon) VALUES (?, ?, ?, ?)";
@@ -16,13 +16,15 @@ public class RatingServiceJDBC implements RatingService {
     public static final String AVG_RATING = "SELECT AVG(rating) FROM rating WHERE game = ?";
     public static final String GET_RATING = "SELECT rating FROM rating WHERE game = ? AND player = ?";
 
+    @Override
     public void addRating(Rating rating) {
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement statement = connection.prepareStatement(INSERT)) {
             statement.setString(1, rating.getGame());
             statement.setString(2, rating.getPlayer());
             statement.setInt(3, rating.getRating());
-            statement.setTimestamp(4, new Timestamp(rating.getRatedOn().getTime()));
+            // Konverzia z LocalDateTime na Timestamp
+            statement.setTimestamp(4, Timestamp.valueOf(rating.getRatedOn()));
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RatingException("Problem inserting rating", e);
@@ -36,7 +38,13 @@ public class RatingServiceJDBC implements RatingService {
             try (ResultSet rs = statement.executeQuery()) {
                 List<Rating> ratings = new ArrayList<>();
                 while (rs.next()) {
-                    ratings.add(new Rating(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getTimestamp(4)));
+                    ratings.add(new Rating(
+                            rs.getString(1),
+                            rs.getString(2),
+                            rs.getInt(3),
+                            // Konverzia z Timestamp na LocalDateTime
+                            rs.getTimestamp(4).toLocalDateTime()
+                    ));
                 }
                 return ratings;
             }
@@ -60,7 +68,8 @@ public class RatingServiceJDBC implements RatingService {
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement statement = connection.prepareStatement(UPDATE)) {
             statement.setInt(1, rating.getRating());
-            statement.setTimestamp(2, new Timestamp(rating.getRatedOn().getTime()));
+            // Konverzia z LocalDateTime na Timestamp
+            statement.setTimestamp(2, Timestamp.valueOf(rating.getRatedOn()));
             statement.setString(3, rating.getGame());
             statement.setString(4, rating.getPlayer());
             statement.executeUpdate();
