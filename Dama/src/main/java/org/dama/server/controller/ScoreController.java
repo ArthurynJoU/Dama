@@ -10,8 +10,11 @@ import java.util.List;
 @RequestMapping("/api/score")
 public class ScoreController {
 
-    @Autowired
-    private ScoreService scoreService;
+    private final ScoreService scoreService;
+
+    public ScoreController(ScoreService scoreService) {
+        this.scoreService = scoreService;
+    }
 
     @PostMapping
     public void addScore(@RequestBody Score score) {
@@ -22,4 +25,10 @@ public class ScoreController {
     public List<Score> getTopScores(@PathVariable String game) {
         return scoreService.getTopScores(game);
     }
+
+    @DeleteMapping
+    public void reset() {
+        scoreService.reset();
+    }
 }
+

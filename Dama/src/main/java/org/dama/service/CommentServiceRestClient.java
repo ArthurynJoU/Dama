@@ -13,8 +13,7 @@ import java.util.List;
 public class CommentServiceRestClient implements CommentService {
     private static final String URL = "http://localhost:8080/api/comment";
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
     public void addComment(Comment comment) {

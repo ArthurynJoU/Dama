@@ -18,10 +18,10 @@ public class RatingController {
     }
 
     @GetMapping("/{game}")
-    public int getAverageRating(@PathVariable String game) {
-        int avg = ratingService.getAverageRating(game);
-        return avg;
+    public Double getAverageRating(@PathVariable String game) {
+        return (double) ratingService.getAverageRating(game);
     }
+
 
     @GetMapping("/{game}/{player}")
     public int getRating(@PathVariable String game, @PathVariable String player) {

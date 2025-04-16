@@ -16,8 +16,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories("org.dama.repository")
 public class GameStudioServer {
     public static void main(String[] args) {
-        SpringApplication.run(GameStudioServer.class, args);
+        SpringApplication app = new SpringApplication(GameStudioServer.class);
+        app.setAdditionalProfiles("server");
+        app.run(args);
     }
 }
-
-

@@ -11,8 +11,7 @@ import org.dama.entity.Rating;
 public class RatingServiceRestClient implements RatingService {
     private static final String URL = "http://localhost:8080/api/rating";
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
     public void setRating(Rating rating) {
