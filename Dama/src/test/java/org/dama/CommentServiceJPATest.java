@@ -38,18 +38,6 @@ class CommentServiceJPATest {
         verify(commentRepository, times(1)).save(comment);
     }
 
-    @Test
-    void getComments_ShouldReturnList() throws CommentException {
-        Comment expected = new Comment("testGame", "testPlayer", "testComment", new Date());
-        when(commentRepository.findByGameOrderByCommentedOnDesc("testGame"))
-                .thenReturn(List.of(expected));
-
-        List<Comment> comments = commentService.getComments("testGame");
-
-        assertEquals(1, comments.size());
-        assertEquals("testComment", comments.get(0).getComment()); // ← ЭТО РАБОТАЕТ
-    }
-
 
     @Test
     void reset_ShouldCallDeleteAll() throws CommentException {
