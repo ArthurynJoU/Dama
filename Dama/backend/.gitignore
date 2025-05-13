@@ -8,7 +8,7 @@
 !**/src/test/**/build/
 
 # ========== IntelliJ IDEA ==========
-.idea/
+../.idea/
 *.iml
 
 # ========== Eclipse ==========
