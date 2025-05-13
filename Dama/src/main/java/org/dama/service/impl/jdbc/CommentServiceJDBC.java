@@ -1,6 +1,9 @@
-package org.dama.service;
+package org.dama.service.impl.jdbc;
 
 import org.dama.entity.Comment;
+import org.dama.service.exception.CommentException;
+import org.dama.service.CommentService;
+
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

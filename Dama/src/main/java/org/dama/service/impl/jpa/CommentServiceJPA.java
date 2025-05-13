@@ -1,7 +1,9 @@
-package org.dama.service;
+package org.dama.service.impl.jpa;
 
 import org.dama.entity.Comment;
 import org.dama.repository.CommentRepository;
+import org.dama.service.exception.CommentException;
+import org.dama.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,8 @@ public class CommentServiceJPA implements CommentService {
     }
 
     @Override
-    public List<Comment> getComments(String game) throws CommentException {
+    @Transactional(readOnly = true)
+    public List<Comment> getComments(String game) {
         try {
             // Predpokladáme, že CommentRepository obsahuje metódu:
             // List<Comment> findByGameOrderByCommentedOnDesc(String game);

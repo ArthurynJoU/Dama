@@ -1,6 +1,7 @@
 package org.dama.service;
 
 import org.dama.entity.Comment;
+import org.dama.service.exception.CommentException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

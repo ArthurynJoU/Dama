@@ -2,11 +2,11 @@ package org.dama.client;
 
 import org.dama.console.ConsoleUI;
 import org.dama.service.CommentService;
-import org.dama.service.CommentServiceRestClient;
+import org.dama.service.impl.rest.CommentServiceRestClient;
 import org.dama.service.RatingService;
-import org.dama.service.RatingServiceRestClient;
+import org.dama.service.impl.rest.RatingServiceRestClient;
 import org.dama.service.ScoreService;
-import org.dama.service.ScoreServiceRestClient;
+import org.dama.service.impl.rest.ScoreServiceRestClient;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;

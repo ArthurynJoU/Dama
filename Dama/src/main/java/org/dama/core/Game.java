@@ -2,9 +2,9 @@ package org.dama.core;
 
 import org.dama.entity.Comment;
 import org.dama.entity.Rating;
-import org.dama.service.ScoreException;
-import org.dama.service.CommentServiceJDBC;
-import org.dama.service.RatingServiceJDBC;
+import org.dama.service.exception.ScoreException;
+import org.dama.service.impl.jdbc.CommentServiceJDBC;
+import org.dama.service.impl.jdbc.RatingServiceJDBC;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

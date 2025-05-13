@@ -1,4 +1,4 @@
-package org.dama.service;
+package org.dama.service.exception;
 
 public class CommentException extends RuntimeException {
     public CommentException(String message) {

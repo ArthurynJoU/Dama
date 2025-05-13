@@ -2,8 +2,8 @@ package org.dama;
 
 import org.dama.entity.Comment;
 import org.dama.repository.CommentRepository;
-import org.dama.service.CommentException;
-import org.dama.service.CommentServiceJPA;
+import org.dama.service.exception.CommentException;
+import org.dama.service.impl.jpa.CommentServiceJPA;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -11,9 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Date;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class CommentServiceJPATest {

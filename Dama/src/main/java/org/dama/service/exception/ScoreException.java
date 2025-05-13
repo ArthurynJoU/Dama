@@ -1,4 +1,4 @@
-package org.dama.service;
+package org.dama.service.exception;
 
 public class ScoreException extends RuntimeException {
     public ScoreException(String message, Throwable cause) {

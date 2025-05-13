@@ -1,4 +1,4 @@
-package org.dama.service;
+package org.dama.service.exception;
 
 public class RatingException extends RuntimeException {
     public RatingException(String message) {

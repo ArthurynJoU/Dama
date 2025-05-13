@@ -1,6 +1,9 @@
-package org.dama.service;
+package org.dama.service.impl.jdbc;
 
 import org.dama.entity.Rating;
+import org.dama.service.exception.RatingException;
+import org.dama.service.RatingService;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

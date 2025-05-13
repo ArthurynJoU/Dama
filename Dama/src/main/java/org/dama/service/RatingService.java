@@ -1,6 +1,7 @@
 package org.dama.service;
 
 import org.dama.entity.Rating;
+import org.dama.service.exception.RatingException;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -2,7 +2,7 @@ package org.dama;
 
 import org.dama.entity.Rating;
 import org.dama.repository.RatingRepository;
-import org.dama.service.RatingServiceJPA;
+import org.dama.service.impl.jpa.RatingServiceJPA;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

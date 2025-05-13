@@ -4,6 +4,9 @@ import org.dama.console.ConsoleUI;
 import org.dama.core.Board;
 import org.dama.core.Game;
 import org.dama.service.*;
+import org.dama.service.impl.rest.CommentServiceRestClient;
+import org.dama.service.impl.rest.RatingServiceRestClient;
+import org.dama.service.impl.rest.ScoreServiceRestClient;
 import org.springframework.context.annotation.*;
 import org.springframework.web.client.RestTemplate;
 

@@ -1,6 +1,9 @@
-package org.dama.service;
+package org.dama.service.impl.jdbc;
 
 import org.dama.entity.Score;
+import org.dama.service.exception.ScoreException;
+import org.dama.service.ScoreService;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

@@ -2,8 +2,7 @@ package org.dama;
 
 import org.dama.entity.Score;
 import org.dama.repository.ScoreRepository;
-import org.dama.service.ScoreService;
-import org.dama.service.ScoreServiceJPA;
+import org.dama.service.impl.jpa.ScoreServiceJPA;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
