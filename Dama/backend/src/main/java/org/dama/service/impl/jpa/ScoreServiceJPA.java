@@ -34,7 +34,7 @@ public class ScoreServiceJPA implements ScoreService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Score> getTopScores(String game) {
+    public List<Score> getTopScores(String game, int limit) {
         return scoreRepository.findTop5ByGameOrderByPointsDesc(game);
     }
 

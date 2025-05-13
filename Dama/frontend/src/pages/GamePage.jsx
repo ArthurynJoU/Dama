@@ -1,45 +1,50 @@
-// src/pages/GamePage.jsx
 import React, { useState, useEffect } from 'react';
 import { get, post } from '../api/httpService';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+
 import Board from '../components/Board';
 import MoveInput from '../components/MoveInput';
 import CommentList from '../components/CommentList';
 import RatingWidget from '../components/RatingWidget';
 
-function GamePage() {
-    const { user } = useAuth(); // Získanie aktuálneho používateľa z kontextu
-    const navigate = useNavigate(); // Hook na navigáciu medzi stránkami
-    const [grid, setGrid] = useState(() => Array(8).fill(Array(8).fill(null))); // Stav hernej plochy
-    const [time, setTime] = useState(0); // Časovač hry
-    const [status, setStatus] = useState('PLAYING'); // Stav hry
+export default function GamePage() {
+    const { user } = useAuth();
+    const navigate = useNavigate();
 
-    // Načítanie novej hry pri načítaní stránky
+    // 8×8—пустая доска
+    const [grid, setGrid] = useState(
+        Array.from({ length: 8 }, () => Array(8).fill(null))
+    );
+    const [time, setTime] = useState(0);
+    const [status, setStatus] = useState('PLAYING');
+
+    // при загрузке страницы подгружаем новую игру
     useEffect(() => {
         get('/game/new')
             .then(data => {
-                setGrid(data.grid); // Nastavenie hernej plochy
-                setStatus(data.status); // Nastavenie stavu hry
+                // некоторые бекенды возвращают { grid: [...], status: 'PLAYING' }
+                setGrid(data.grid ?? data);
+                setStatus(data.status ?? 'PLAYING');
             })
             .catch(console.error);
     }, []);
 
-    // Spustenie časovača, ak hra prebieha
+    // таймер, пока играем
     useEffect(() => {
         if (status !== 'PLAYING') return;
         const timer = setInterval(() => setTime(t => t + 1), 1000);
-        return () => clearInterval(timer); // Vyčistenie časovača pri zmene stavu
+        return () => clearInterval(timer);
     }, [status]);
 
-    // Spracovanie pohybu hráča
     const handleMove = async move => {
         try {
             const result = await post('/game/move', { move, player: user });
-            setGrid(result.grid); // Aktualizácia hernej plochy
-            setStatus(result.status); // Aktualizácia stavu hry
+            setGrid(result.grid);
+            setStatus(result.status);
+
             if (result.status === 'FINISHED') {
-                // Ak je hra ukončená, uložiť skóre a presmerovať na tabuľku výsledkov
+                // сохраним очки
                 await post('/score', {
                     game: 'Dama',
                     player: user,
@@ -47,33 +52,35 @@ function GamePage() {
                 });
                 navigate('/scores');
             }
-        } catch (err) {
-            console.error(err);
-            alert('Neplatný ťah'); // Zobrazenie chyby pri neplatnom ťahu
+        } catch {
+            alert('Неверный ход');
         }
     };
 
-    // Reštart hry
     const handleRestart = () => {
-        setTime(0); // Vynulovanie časovača
-        setStatus('PLAYING'); // Nastavenie hry na aktívnu
+        setTime(0);
+        setStatus('PLAYING');
         get('/game/new')
-            .then(data => setGrid(data.grid)) // Načítanie novej hernej plochy
+            .then(data => setGrid(data.grid ?? data))
             .catch(console.error);
     };
 
     return (
         <div>
             <h1>Dama</h1>
-            <Board state={grid} /> {/* Komponent na vykreslenie hernej plochy */}
-            <MoveInput onMove={handleMove} /> {/* Komponent na zadávanie ťahov */}
-            <div>Time: {time}s</div> {/* Zobrazenie uplynutého času */}
-            <button onClick={handleRestart}>Restart</button> {/* Tlačidlo na reštart hry */}
 
-            <CommentList game="Dama" /> {/* Komponent na komentáre ku hre */}
-            <RatingWidget game="Dama" /> {/* Komponent na hodnotenie hry */}
+            {/* доска */}
+            <Board grid={grid} />
+
+            {/* ввод хода */}
+            <MoveInput onMove={handleMove} />
+
+            <div>Time: {time}s</div>
+            <button onClick={handleRestart}>Restart</button>
+
+            {/* комментарии и рейтинг в своих компонентах */}
+            <CommentList game="Dama" />
+            <RatingWidget game="Dama" />
         </div>
     );
 }
-
-export default GamePage;

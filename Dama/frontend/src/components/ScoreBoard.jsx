@@ -6,18 +6,19 @@ function ScoreBoard({ game, limit }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);   // добавим сообщение об ошибке
 
-    useEffect(() => {
-        setLoading(true);
-        setError(null);
+        useEffect(() => {
+                setLoading(true);
+                setError(null);
 
-        get(`/score/top?limit=${limit}`)
-            .then(data => setScores(data))
+                    // запрашиваем именно для нужной игры!
+                      get(`/score/${game}?limit=${limit}`)
+                   .then(data => setScores(data))
             .catch(err => {
-                console.error(err);
-                setError('Failed to load scores');     // покажем юзеру
-            })
-            .finally(() => setLoading(false));       // ← ОБЯЗАТЕЛЬНО
-    }, [game, limit]);
+                           console.error(err);
+                           setError('No scores yet.');
+                       })
+                    .finally(() => setLoading(false));
+           }, [game, limit]);
 
     if (loading) return <p>Loading scores…</p>;
     if (error)   return <p style={{color:'red'}}>{error}</p>;
@@ -25,7 +26,14 @@ function ScoreBoard({ game, limit }) {
 
     return (
         <table>
-            <thead>…</thead>
+            <thead>
+                         <tr>
+                              <th>#</th>
+                              <th>Player</th>
+                             <th>Score</th>
+                             <th>Data</th>
+                             </tr>
+                      </thead>
             <tbody>
             {scores.map((s,i)=>(
                 <tr key={i}>

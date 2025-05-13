@@ -115,7 +115,7 @@ public class GameMenu {
     }
 
     private void showTopScores() {
-        scoreService.getTopScores("Dama").stream().limit(5)
+        scoreService.getTopScores("Dama", 5)
                 .forEach(score -> System.out.printf("%s  %d bodov  (%s)\n",
                         score.getPlayer(), score.getPoints(), score.getPlayedOn()));
         System.out.println();

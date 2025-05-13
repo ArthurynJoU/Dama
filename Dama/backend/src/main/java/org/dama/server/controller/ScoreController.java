@@ -22,9 +22,12 @@ public class ScoreController {
     }
 
     @GetMapping("/{game}")
-    public List<Score> getTopScores(@PathVariable String game) {
-        return scoreService.getTopScores(game);
-    }
+    public List<Score> getTopScores(
+        @PathVariable String game,
+        @RequestParam(defaultValue = "10") int limit
+    ) {
+                return scoreService.getTopScores(game, limit);
+            }
 
     @DeleteMapping
     public void reset() {

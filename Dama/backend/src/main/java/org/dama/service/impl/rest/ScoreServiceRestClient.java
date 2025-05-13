@@ -22,7 +22,7 @@ public class ScoreServiceRestClient implements ScoreService {
     }
 
     @Override
-    public List<Score> getTopScores(String game) {
+    public List<Score> getTopScores(String game, int limit) {
         return Arrays.asList(Objects.requireNonNull(restTemplate.getForObject(url + "/" + game, Score[].class)));
     }
 

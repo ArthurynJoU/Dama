@@ -18,7 +18,7 @@ public class ScoreServiceJDBC implements ScoreService {
             "INSERT INTO score (game, player, points, playedon) VALUES (?,?,?,?)";
 
     private static final String SELECT_SQL =
-            "SELECT game, player, points, playedon FROM score WHERE game=? ORDER BY points DESC";
+            "SELECT game, player, points, playedon FROM score WHERE game=? ORDER BY points DESC LIMIT ?";
 
     private static final String DELETE_SQL = "DELETE FROM score";
 
@@ -63,11 +63,12 @@ public class ScoreServiceJDBC implements ScoreService {
     }
 
     @Override
-    public List<Score> getTopScores(String game) {
+    public List<Score> getTopScores(String game, int limit) {
         List<Score> list = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement ps = conn.prepareStatement(SELECT_SQL)) {
             ps.setString(1, game);
+            ps.setInt   (2, limit);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Score s = new Score();

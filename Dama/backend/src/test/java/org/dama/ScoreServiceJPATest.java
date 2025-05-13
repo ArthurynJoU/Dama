@@ -38,7 +38,7 @@ class ScoreServiceJPATest {
         scoreService.addScore(sampleScore);
         verify(scoreRepository, times(1)).save(sampleScore);
 
-        List<Score> scores = scoreService.getTopScores("Dama");
+        List<Score> scores = scoreService.getTopScores("Dama", limit);
         assertFalse(scores.isEmpty());
         Score saved = scores.get(0);
         assertEquals("Víťaz", saved.getPlayer());
@@ -56,10 +56,10 @@ class ScoreServiceJPATest {
         scoreService.addScore(new Score("Dama", "A", 3, LocalDateTime.now()));
         scoreService.addScore(new Score("Dama", "B", 7, LocalDateTime.now()));
         verify(scoreRepository, times(2)).save(any(Score.class));
-        assertTrue(scoreService.getTopScores("Dama").size() > 0);
+        assertTrue(scoreService.getTopScores("Dama", limit).size() > 0);
 
         scoreService.reset();
         verify(scoreRepository, times(1)).deleteAll();
-        assertEquals(0, scoreService.getTopScores("Dama").size());
+        assertEquals(0, scoreService.getTopScores("Dama", limit).size());
     }
 }
