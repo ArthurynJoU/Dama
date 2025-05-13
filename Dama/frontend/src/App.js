@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+// Importujeme komponenty na smerovanie
+import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
+import GamePage from './pages/GamePage';
+import HighScoresPage from './pages/HighScoresPage';
+import LoginPage from './pages/LoginPage';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <BrowserRouter>
+        {/* Hlavné menu na navigáciu medzi jednotlivými stránkami */}
+        <nav style={{ display: 'flex', gap: '1rem', margin: '1rem 0' }}>
+          <NavLink to="/game">Game</NavLink> {/* Odkaz na stránku s hrou */}
+          <NavLink to="/scores">High Scores</NavLink> {/* Odkaz na stránku s najlepšími skóre */}
+          <NavLink to="/login">Login</NavLink> {/* Odkaz na prihlasovaciu stránku */}
+        </nav>
+
+        <Routes>
+          {/* Trasa na stránku s hrou */}
+          <Route path="/game" element={<GamePage />} />
+          {/* Trasa na stránku s top 5 výsledkami */}
+          <Route path="/scores" element={<HighScoresPage />} />
+          {/* Trasa na prihlasovaciu stránku */}
+          <Route path="/login" element={<LoginPage />} />
+          {/* Akákoľvek iná trasa presmeruje na stránku s hrou */}
+          <Route path="*" element={<GamePage />} />
+        </Routes>
+      </BrowserRouter>
   );
 }
 
