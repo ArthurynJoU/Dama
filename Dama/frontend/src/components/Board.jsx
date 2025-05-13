@@ -1,27 +1,50 @@
+// src/components/Board.jsx
 import React from 'react';
-import styles from './Board.module.css';
+import { Box } from '@mui/material';
+import Square from './Square';
 
-/**
- * grid – 8×8 pole, kde každý prvok je buď null, alebo znak predstavujúci figúrku.
- * Príklad: '●' a '○' alebo 'B'/'W'
- */
-function Board({ grid }) {
+export default function Board({ board, onSquareClick, possibleMoves, selectedDest }) {
     return (
-        <div className={styles.board}>
-            {grid.map((row, i) =>
-                row.map((cell, j) => (
-                    <div
-                        key={`${i}-${j}`}
-                        className={`${styles.cell} ${
-                            (i + j) % 2 === 0 ? styles.white : styles.black
-                        }`}
-                    >
-                        {cell && <span className={styles.piece}>{cell}</span>}
-                    </div>
-                ))
+        <Box
+            sx={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(8, 60px)',
+                border: '2px solid #333',
+                boxSizing: 'content-box',
+            }}
+        >
+            {board.map((row, r) =>
+                row.map((cell, c) => {
+                    const black = (r + c) % 2 === 1;
+                    const isDest = selectedDest?.row === r && selectedDest?.col === c;
+                    const isMove = possibleMoves.some(m => m.row === r && m.col === c);
+                    const style = isDest
+                        ? { boxShadow: '0 0 0 4px #8FBC8F inset' } // light green
+                        : isMove
+                            ? { boxShadow: '0 0 0 3px #f00 inset' } // red
+                            : {};
+                    return (
+                        <Square
+                            key={`${r}-${c}`}
+                            black={black}
+                            onClick={() => onSquareClick(r, c)}
+                            style={style}
+                        >
+                            {cell && (
+                                <Box
+                                    sx={{
+                                        width: 40,
+                                        height: 40,
+                                        borderRadius: '50%',
+                                        backgroundColor: cell.player === 1 ? '#fff' : '#000',
+                                        border: cell.king ? '3px solid gold' : 'none',
+                                    }}
+                                />
+                            )}
+                        </Square>
+                    );
+                })
             )}
-        </div>
+        </Box>
     );
 }
-
-export default Board;

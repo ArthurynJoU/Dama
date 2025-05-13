@@ -1,32 +1,38 @@
 import React from 'react';
-// Importujeme komponenty na smerovanie
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
+import { Container, AppBar, Toolbar, Typography, Button } from '@mui/material';
+import MainPage from './pages/MainPage';
+import SetupPage from './pages/SetupPage';
 import GamePage from './pages/GamePage';
-import HighScoresPage from './pages/HighScoresPage';
-import LoginPage from './pages/LoginPage';
+import VictoryRatingPage from './pages/VictoryRatingPage';
+import VictoryCommentPage from './pages/VictoryCommentPage';
+import TopPlayersPage from './pages/TopPlayersPage';
+import CommentsPage from './pages/CommentsPage';
+import RulesPage from './pages/RulesPage';
 
 function App() {
-  return (
-      <BrowserRouter>
-        {/* Hlavné menu na navigáciu medzi jednotlivými stránkami */}
-        <nav style={{ display: 'flex', gap: '1rem', margin: '1rem 0' }}>
-          <NavLink to="/game">Game</NavLink> {/* Odkaz na stránku s hrou */}
-          <NavLink to="/scores">High Scores</NavLink> {/* Odkaz na stránku s najlepšími skóre */}
-          <NavLink to="/login">Login</NavLink> {/* Odkaz na prihlasovaciu stránku */}
-        </nav>
-
-        <Routes>
-          {/* Trasa na stránku s hrou */}
-          <Route path="/game" element={<GamePage />} />
-          {/* Trasa na stránku s top 5 výsledkami */}
-          <Route path="/scores" element={<HighScoresPage />} />
-          {/* Trasa na prihlasovaciu stránku */}
-          <Route path="/login" element={<LoginPage />} />
-          {/* Akákoľvek iná trasa presmeruje na stránku s hrou */}
-          <Route path="*" element={<GamePage />} />
-        </Routes>
-      </BrowserRouter>
-  );
+    return (
+        <Container maxWidth="md">
+            <AppBar position="static" style={{ marginBottom: '16px' }}>
+                <Toolbar>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        Checkers Game
+                    </Typography>
+                    <Button color="inherit" component={Link} to="/">Home</Button>
+                </Toolbar>
+            </AppBar>
+            <Routes>
+                <Route path="/" element={<MainPage />} />
+                <Route path="/setup" element={<SetupPage />} />
+                <Route path="/game" element={<GamePage />} />
+                <Route path="/victory/rating" element={<VictoryRatingPage />} />
+                <Route path="/victory/comment" element={<VictoryCommentPage />} />
+                <Route path="/top-players" element={<TopPlayersPage />} />
+                <Route path="/comments" element={<CommentsPage />} />
+                <Route path="/rules" element={<RulesPage />} />
+            </Routes>
+        </Container>
+    );
 }
 
 export default App;
