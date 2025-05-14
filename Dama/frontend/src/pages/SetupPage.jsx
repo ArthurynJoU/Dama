@@ -20,7 +20,6 @@ export default function SetupPage() {
     const [player1, setPlayer1] = useState({ name: '', type: 'Human' });
     const [player2, setPlayer2] = useState({ name: '', type: 'Human' });
 
-    // Если demo=true, заполняем дефолтные имена, но форма остаётся открытой
     useEffect(() => {
         if (demoMode) {
             setPlayer1({ name: 'DemoWhite', type: 'Human' });
@@ -30,22 +29,25 @@ export default function SetupPage() {
 
     const handleSubmit = e => {
         e.preventDefault();
-        let n1 = player1.name.trim() || 'Player1';
-        let n2 = player2.name.trim() || 'Player2';
-        if (n1 === n2) n2 += '2';
-        if (player1.type === 'Bot') n1 += ' (Bot)';
-        if (player2.type === 'Bot') n2 += ' (Bot)';
+
+        const n1 = player1.name.trim() || 'Player1';
+        const n2 = player2.name.trim() || 'Player2';
+
+        const name1 = player1.type === 'Bot' ? `${n1} (Bot)` : n1;
+        const name2 = player2.type === 'Bot' ? `${n2} (Bot)` : n2;
+
         nav('/game', {
             state: {
-                player1: { ...player1, name: n1 },
-                player2: { ...player2, name: n2 },
+                player1: { ...player1, name: name1 },
+                player2: { ...player2, name: name2 },
                 demo: demoMode,
             },
         });
     };
 
+
     return (
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4, textAlign: 'center' }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4, textAlign: 'center' }} className="dark-glass">
             <Typography variant="h5" gutterBottom>
                 {demoMode ? 'Demo Game Setup' : 'Setup Players'}
             </Typography>

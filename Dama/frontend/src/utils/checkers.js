@@ -1,11 +1,7 @@
 // src/utils/checkers.js
-
-// Проверка границ
 function isInside(r, c) {
     return r >= 0 && r < 8 && c >= 0 && c < 8;
 }
-
-/* ---------- ИНИЦИАЛИЗАЦИЯ ДОСОК ---------- */
 
 export function initializeBoard() {
     const board = Array(8).fill(null).map(() => Array(8).fill(null));
@@ -26,8 +22,6 @@ export function initializeDemoBoard() {
     b[2][5] = { player: 2, king: false };
     return b;
 }
-
-/* ---------- ХОДЫ MAN ---------- */
 
 function getManMoves(board, r, c) {
     const p = board[r][c];
@@ -57,8 +51,6 @@ function getManMoves(board, r, c) {
     return out;
 }
 
-/* ---------- ХОДЫ KING (летящая дамка) ---------- */
-
 function getKingMoves(board, r, c) {
     const p = board[r][c];
     if (!p) return [];
@@ -81,7 +73,6 @@ function getKingMoves(board, r, c) {
 
             const cell = board[nr][nc];
             if (!cell) {
-                // пустая
                 moves.push({
                     row: nr,
                     col: nc,
@@ -93,22 +84,18 @@ function getKingMoves(board, r, c) {
             }
 
             if (!seenEnemy && cell.player !== p.player) {
-                // первая вражеская — помним и идём дальше
                 seenEnemy = true;
                 capPos = { row: nr, col: nc };
                 step++;
                 continue;
             }
 
-            // своя фигура или вторая вражеская — стоп
             break;
         }
     }
 
     return moves;
 }
-
-/* ---------- ПУБЛИЧНЫЕ АПИ ---------- */
 
 export function getValidMoves(board, r, c) {
     const p = board[r][c];
@@ -123,19 +110,16 @@ export function applyMove(board, fr, fc, tr, tc, captured = null) {
     newB[fr][fc] = null;
     newB[tr][tc] = piece;
 
-    // обычное короткое взятие
     if (Math.abs(fr - tr) === 2 && !captured) {
         const cr = (fr + tr) / 2;
         const cc = (fc + tc) / 2;
         newB[cr][cc] = null;
     }
 
-    // «летающая» дамка — удаляем явно переданную жертву
     if (captured) {
         newB[captured.row][captured.col] = null;
     }
 
-    // повышение
     if (
         !piece.king &&
         ((piece.player === 1 && tr === 0) || (piece.player === 2 && tr === 7))

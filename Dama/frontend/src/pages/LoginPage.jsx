@@ -1,49 +1,41 @@
-// src/pages/LoginPage.jsx
 import React, { useState } from 'react';
-import { post } from '../api/httpService';
+import { Box, TextField, Button, Typography, Alert } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-function LoginPage() {
-    const [username, setUsername] = useState(''); // Stav pre meno používateľa
-    const [error, setError] = useState(''); // Stav pre chybové hlásenie
-    const { login } = useAuth(); // Prístup k funkcii login z kontextu
+export default function LoginPage() {
+    const [name, setName] = useState('');
+    const [error, setError] = useState(null);
+    const nav = useNavigate();
+    const { login } = useAuth();
 
-    const handleSubmit = async e => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        try {
-            // Odoslanie mena používateľa na backend
-            await post('/auth/login', { username });
-            // Ak je všetko v poriadku, uložíme používateľa do kontextu
-            login(username);
-        } catch (err) {
-            console.error(err);
-            setError('Prihlásenie zlyhalo'); // Nastavenie chybovej správy
+        const trimmed = name.trim();
+        if (!trimmed) {
+            setError('Name is required');
+            return;
         }
+        login(trimmed);
+        nav('/profile');
     };
 
     return (
-        <div>
-            <h1>Login</h1>
-            {/* Zobrazenie chyby, ak existuje */}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            {/* Formulár na prihlásenie */}
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Username:
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={e => setUsername(e.target.value)} // Aktualizácia stavu pri zmene
-                        placeholder="Your name"
-                    />
-                </label>
-                {/* Tlačidlo na prihlásenie, deaktivované ak je meno prázdne */}
-                <button type="submit" disabled={!username.trim()}>
-                    Login
-                </button>
-            </form>
-        </div>
+        <Box textAlign="center" mt={4} className="dark-glass">
+            <Typography variant="h4" gutterBottom>Login</Typography>
+
+            {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+
+            <Box component="form" onSubmit={handleSubmit} >
+                <TextField
+                    label="Username"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    sx={{ mb: 2 }}
+                />
+                <Button type="submit" variant="contained">Login</Button>
+            </Box>
+        </Box>
     );
 }
-
-export default LoginPage;

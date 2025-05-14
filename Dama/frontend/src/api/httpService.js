@@ -18,7 +18,6 @@ export async function post(path, body) {
         body: JSON.stringify(body)
     });
     if (!res.ok) throw new Error(`POST ${path} failed: ${res.status}`);
-    // если тело пустое, res.text() даст '' → просто возвращаем null
     const text = await res.text();
     if (!text) return null;
     try {

@@ -33,7 +33,7 @@ export default function VictoryCommentPage() {
     const handleSkip = () => nav('/');
 
     return (
-        <Box textAlign="center" mt={4}>
+        <Box textAlign="center" mt={4} className="dark-glass">
             <Typography variant="h6" gutterBottom>
                 Leave a comment (optional)
             </Typography>

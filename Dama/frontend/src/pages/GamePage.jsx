@@ -17,7 +17,6 @@ export default function GamePage() {
     const nav = useNavigate();
     const { player1, player2, demo } = state || {};
 
-    // Инициализация
     const [board, setBoard] = useState(
         demo ? initializeDemoBoard() : initializeBoard()
     );
@@ -29,12 +28,10 @@ export default function GamePage() {
     const [blackScore, setBlackScore] = useState(0);
     const [timeLeft, setTimeLeft] = useState(60);
 
-    // Redirect если нет данных
     useEffect(() => {
         if (!player1 || !player2) nav('/');
     }, [player1, player2, nav]);
 
-    // Таймер на ход
     useEffect(() => {
         setTimeLeft(60);
     }, [turn]);
@@ -48,7 +45,6 @@ export default function GamePage() {
           return () => clearTimeout(t);
         }, [timeLeft]);
 
-    // Ход бота
     useEffect(() => {
         const cur = turn === 1 ? player1 : player2;
         if (cur.type === 'Bot') {
@@ -57,31 +53,25 @@ export default function GamePage() {
         }
     }, [turn, board]);
 
-    // Обработка клика
     const onSquareClick = (r, c) => {
         const piece = board[r][c];
-        // если уже выбрана фигура
         if (selectedPiece) {
-            // если кликнули по другой своей фигуре — переселектим
             if (piece?.player === turn) {
                 setSelectedPiece({ row: r, col: c });
                 setPossibleMoves(getValidMoves(board, r, c));
                 setSelectedDest(null);
                 return;
             }
-            // иначе, если кликнули по допустимой цели — запомним
             const mv = possibleMoves.find(m => m.row === r && m.col === c);
             if (mv) setSelectedDest(mv);
             return;
         }
-        // иначе — селектим свою фигуру
         if (piece?.player === turn) {
             setSelectedPiece({ row: r, col: c });
             setPossibleMoves(getValidMoves(board, r, c));
         }
     };
 
-    // Enter подтверждает ход
     useEffect(() => {
         const handler = e => {
             if (e.key === 'Enter' && selectedPiece && selectedDest) {
@@ -92,7 +82,6 @@ export default function GamePage() {
         return () => window.removeEventListener('keydown', handler);
     });
 
-    // Ход бота
     const botMove = () => {
         const moves = getAllMoves(board, turn);
         if (moves.length === 0) return finishGame();
@@ -100,13 +89,10 @@ export default function GamePage() {
         doMove(mv.from, mv);
     };
 
-    // Завершение
     const finishGame = () => {
         const winner = turn === 1 ? player1 : player2;
         const points = turn === 1 ? whiteScore : blackScore;
-        // сохраняем счёт
         postScore('Dama', winner.name, points);
-        // если человек — спрашиваем рейтинг/коммент
         if (winner.type === 'Human') {
             nav('/victory/rating', { state: { winner } });
         } else {
@@ -114,24 +100,17 @@ export default function GamePage() {
         }
     };
 
-    /* поместите рядом с другими helper-функциями */
     const handleTimeout = () => {
-        // снимем все выделения и возможные ходы
         setSelectedPiece(null);
         setSelectedDest(null);
         setPossibleMoves([]);
 
-        // переходим к сопернику
         setTurn(t => (t === 1 ? 2 : 1));
     };
-
-
-    // фрагмент src/pages/GamePage.jsx
 
     const doMove = (from, dest) => {
         const prevBoard = board;
 
-        // применяем ход, передавая координаты captured (для летающей дамки)
         const newB = applyMove(
             board,
             from.row,
@@ -142,7 +121,6 @@ export default function GamePage() {
         );
         setBoard(newB);
 
-        // начисляем очки, если было взятие
         if (dest.capture) {
             const capPiece = prevBoard[dest.captured.row][dest.captured.col];
             const pts = capPiece.king ? 2 : 1;
@@ -171,8 +149,8 @@ export default function GamePage() {
 
 
     return (
-        <Box textAlign="center" mt={2}>
-            <Box display="flex" justifyContent="center" alignItems="center" mb={1}>
+        <Box textAlign="center" mt={2} >
+            <Box display="flex" justifyContent="center" alignItems="center" mb={1} className="dark-glass">
                 <Typography sx={{ mx: 4 }}>
                     {player1.name}: {whiteScore} 🏅
                 </Typography>

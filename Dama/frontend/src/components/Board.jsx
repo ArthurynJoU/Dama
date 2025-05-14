@@ -1,7 +1,7 @@
-// src/components/Board.jsx
 import React from 'react';
 import { Box } from '@mui/material';
 import Square from './Square';
+import UmbrellaPiece from './UmbrellaPiece';
 
 export default function Board({ board, onSquareClick, possibleMoves, selectedDest }) {
     return (
@@ -15,14 +15,16 @@ export default function Board({ board, onSquareClick, possibleMoves, selectedDes
         >
             {board.map((row, r) =>
                 row.map((cell, c) => {
-                    const black = (r + c) % 2 === 1;
-                    const isDest = selectedDest?.row === r && selectedDest?.col === c;
-                    const isMove = possibleMoves.some(m => m.row === r && m.col === c);
+                    const black   = (r + c) % 2 === 1;
+                    const isDest  = selectedDest?.row === r && selectedDest?.col === c;
+                    const isMove  = possibleMoves.some(m => m.row === r && m.col === c);
+
                     const style = isDest
-                        ? { boxShadow: '0 0 0 4px #8FBC8F inset' } // light green
+                        ? { boxShadow: '0 0 0 4px #8FBC8F inset' }
                         : isMove
-                            ? { boxShadow: '0 0 0 3px #f00 inset' } // red
+                            ? { boxShadow: '0 0 0 3px #f00 inset' }
                             : {};
+
                     return (
                         <Square
                             key={`${r}-${c}`}
@@ -31,14 +33,9 @@ export default function Board({ board, onSquareClick, possibleMoves, selectedDes
                             style={style}
                         >
                             {cell && (
-                                <Box
-                                    sx={{
-                                        width: 40,
-                                        height: 40,
-                                        borderRadius: '50%',
-                                        backgroundColor: cell.player === 1 ? '#fff' : '#000',
-                                        border: cell.king ? '3px solid gold' : 'none',
-                                    }}
+                                <UmbrellaPiece
+                                    king   = {cell.king}
+                                    player = {cell.player}
                                 />
                             )}
                         </Square>

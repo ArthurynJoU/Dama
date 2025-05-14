@@ -1,5 +1,4 @@
-// src/pages/VictoryRatingPage.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button, TextField, Alert } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { post } from '../api/httpService';
@@ -9,13 +8,22 @@ const GAME = 'Dama';
 export default function VictoryRatingPage() {
     const { state } = useLocation();
     const nav = useNavigate();
-    const { winner } = state || {};
+    const winner = state?.winner || JSON.parse(localStorage.getItem('winner'));
+
     const [rating, setRating] = useState('');
     const [error, setError] = useState(null);
 
+    useEffect(() => {
+        if (state?.winner) localStorage.setItem('winner', JSON.stringify(state.winner));
+    }, [state]);
+
     if (!winner) {
-        nav('/');
-        return null;
+        return (
+            <Box textAlign="center" mt={4} className="dark-glass">
+                <Typography variant="h5">No winner found</Typography>
+                <Button variant="contained" onClick={() => nav('/')}>Go Home</Button>
+            </Box>
+        );
     }
 
     const handleSubmit = async e => {
@@ -38,7 +46,7 @@ export default function VictoryRatingPage() {
     const handleSkip = () => nav('/victory/comment', { state: { winner } });
 
     return (
-        <Box textAlign="center" mt={4}>
+        <Box textAlign="center" mt={4} className="dark-glass">
             <Typography variant="h5" gutterBottom>
                 Congrats, {winner.name}!
             </Typography>
@@ -53,7 +61,7 @@ export default function VictoryRatingPage() {
                     onChange={e => setRating(e.target.value)}
                     type="number"
                     inputProps={{ step: 0.1, min: 0, max: 5 }}
-                    sx={{ mb:2 }}
+                    sx={{ mb:2, input: { color: 'white' }, label: { color: 'white' } }}
                 />
                 <Box>
                     <Button type="submit" variant="contained" sx={{ m:1 }}>

@@ -11,10 +11,8 @@ export default function MainPage() {
     const [avgRating, setAvgRating] = useState(null);
 
     useEffect(() => {
-        /* 1️⃣  Пробуем «новый» путь с массивом всех оценок */
         get(`/rating/${GAME}`)
             .then(data => {
-                // если пришёл массив – считаем среднее
                 if (Array.isArray(data)) {
                     if (data.length) {
                         const sum = data.reduce(
@@ -26,17 +24,14 @@ export default function MainPage() {
                     }
                     return;
                 }
-                // если пришло одно число – это уже среднее
                 if (typeof data === 'number') {
                     setAvgRating(data);
                     return;
                 }
-                // если пришёл объект { average: 3.2 }
                 if (data && typeof data.average === 'number') {
                     setAvgRating(data.average);
                 }
             })
-            /* 2️⃣  Если эндпоинт другой – пробуем запасной */
             .catch(() =>
                 get(`/rating/average/${GAME}`)
                     .then(val => setAvgRating(
@@ -47,16 +42,18 @@ export default function MainPage() {
     }, []);
 
     return (
-        <Box textAlign="center" mt={4}>
-            <Typography variant="h3" gutterBottom>Checkers Game</Typography>
+        <Box textAlign="center" mt={4} >
+            <Box className="dark-glass">
+            <Typography variant="h3" gutterBottom >Dama</Typography>
 
             {typeof avgRating === 'number' && (
                 <Typography variant="h6" gutterBottom>
                     Average Rating: {avgRating.toFixed(2)} ⭐ (max 5)
                 </Typography>
             )}
+            </Box>
 
-            <Box mt={3}>
+            <Box mt={3} >
                 <Button variant="contained" sx={{ m:1 }} onClick={() => nav('/setup')}>
                     Play
                 </Button>

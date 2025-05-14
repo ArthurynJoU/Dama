@@ -1,74 +1,104 @@
 // src/pages/CommentsPage.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    Box,
     Typography,
+    Box,
     List,
     ListItem,
     ListItemText,
-    CircularProgress,
-    Alert,
+    Button,
+    TextField,
+    Stack,
 } from '@mui/material';
-import { get } from '../api/httpService';
+import { get, post } from '../api/httpService';
+import { useAuth } from '../context/AuthContext';
 
 const GAME = 'Dama';
 
 export default function CommentsPage() {
+    const { player } = useAuth();
     const [comments, setComments] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [replyToId, setReplyToId]   = useState(null);
+    const [replyText, setReplyText]   = useState('');
 
-    useEffect(() => {
-        get(`/comment/${GAME}`)
-            .then(data => setComments(data))
-            .catch(() => setError('Failed to load comments.'))
-            .finally(() => setLoading(false));
-    }, []);
+    const load = () => {
+        get(`/comment/${GAME}`).then(setComments);
+    };
+    useEffect(load, []);
 
-    if (loading) {
-        return (
-            <Box textAlign="center" mt={4}>
-                <CircularProgress />
-            </Box>
-        );
-    }
-    if (error) {
-        return (
-            <Box textAlign="center" mt={4}>
-                <Alert severity="error">{error}</Alert>
-            </Box>
-        );
-    }
+    const handleReply = async (parent) => {
+        if (!replyText.trim()) return;
+        const text = `↳ @${parent.player}: ${replyText.trim()}`;
+        await post('/comment', {
+            game: GAME,
+            player,
+            comment: text,
+            commentedOn: new Date().toISOString(),
+        });
+        setReplyText('');
+        setReplyToId(null);
+        load();
+    };
 
     return (
-        <Box sx={{ mt: 4 }}>
+        <Box sx={{ mt: 4 }} className="dark-glass">
             <Typography variant="h5" gutterBottom>
                 Winner Comments
             </Typography>
-            <Box
-                sx={{
-                    maxHeight: 400,
-                    overflowY: 'auto',
-                    border: '1px solid #ccc',
-                    borderRadius: 1,
-                    p: 1,
-                }}
-            >
-                {comments.length === 0 ? (
-                    <Typography>No comments yet.</Typography>
-                ) : (
-                    <List>
-                        {comments.map(c => (
-                            <ListItem key={c.id} divider>
+
+            <List sx={{ maxHeight: 500, overflowY: 'auto' }}>
+                {comments.map((c) => {
+                    const isReply = c.comment.startsWith('↳');
+                    return (
+                        <Box key={c.id ?? `${c.player}-${c.commentedOn}`}>
+                            <ListItem
+                                sx={{ pl: isReply ? 4 : 1 }}
+                                secondaryAction={
+                                    player && !isReply && (
+                                        <Button
+                                            size="small"
+                                            onClick={() =>
+                                                setReplyToId(replyToId === c.id ? null : c.id)
+                                            }
+                                        >
+                                            Reply
+                                        </Button>
+                                    )
+                                }
+                            >
                                 <ListItemText
-                                    primary={`${c.player} — ${new Date(c.commentedOn).toLocaleString()}`}
+                                    primary={`${c.player} — ${new Date(
+                                        c.commentedOn,
+                                    ).toLocaleString()}`}
                                     secondary={c.comment}
                                 />
                             </ListItem>
-                        ))}
-                    </List>
-                )}
-            </Box>
+
+                            {replyToId === c.id && (
+                                <Stack
+                                    direction="row"
+                                    spacing={1}
+                                    sx={{ pl: 4, pr: 2, pb: 2 }}
+                                >
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        label="Your reply"
+                                        value={replyText}
+                                        onChange={(e) => setReplyText(e.target.value)}
+                                    />
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => handleReply(c)}
+                                    >
+                                        Send
+                                    </Button>
+                                </Stack>
+                            )}
+                        </Box>
+                    );
+                })}
+            </List>
         </Box>
     );
 }

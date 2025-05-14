@@ -3,7 +3,7 @@ import { Typography, Box, List, ListItem } from '@mui/material';
 
 export default function RulesPage() {
     return (
-        <Box sx={{ mt: 4 }}>
+        <Box sx={{ mt: 4 }} className="dark-glass">
             <Typography variant="h5" gutterBottom>
                 Checkers Rules (English)
             </Typography>
